@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VirusTotal Hash Checker</title>
+    <style>
+        /* Apply CSS styles to textarea */
+        #hashInput {
+            width: 700px; /* Optional: Set a fixed width for the textarea */
+            height: 200px; /* Optional: Set a fixed height for the textarea */
+            resize: none; /* Prevent resizing */
+        }
+    </style>
+</head>
+<body>
+    <h1>VirusTotal Hash Checker</h1>
+    <textarea id="hashInput" placeholder="Paste your hashes here"></textarea><br><br>
+    <button id="checkButton" onclick="checkHashes()">Check Hashes</button><br><br>
+    <div id="analysisResult"></div>
+
+    <script>
+        async function checkHashes() {
+            const hashInput = document.getElementById('hashInput').value;
+            const checkButton = document.getElementById('checkButton');
+            
+            // Disable the button to prevent multiple clicks
+            checkButton.disabled = true;
+            
+            const response = await fetch('/checkHashes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ hashes: hashInput })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                const analysisResult = document.getElementById('analysisResult');
+                analysisResult.innerHTML = ''; // Clear previous results
+
+                // Create a list to hold the results
+                const resultList = document.createElement('ul');
+
+                // Iterate through each analysis result and add to the list
+                data.analysisResults.forEach(result => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = result;
+                    resultList.appendChild(listItem);
+                });
+
+                // Append the list to the analysisResult
+                analysisResult.appendChild(resultList);
+            } else {
+                alert('Error occurred while checking hashes');
+            }
+
+            // Re-enable the button after displaying the output
+            checkButton.disabled = false;
+        }
+    </script>
+</body>
+</html>
