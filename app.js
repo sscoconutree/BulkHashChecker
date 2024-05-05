@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const { json } = require('express');
 
-const apikey = '723a6f400cc6656c7e095e68165cd9b6bb42773a83faef359512a353785903b3';
+const apikey = 'API_KEY';
 
 const app = express();
 
