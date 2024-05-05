@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const { json } = require('express');
 
-const apikey = 'API_KEY';
+const apikey = '723a6f400cc6656c7e095e68165cd9b6bb42773a83faef359512a353785903b3';
 
 const app = express();
 
@@ -20,9 +20,8 @@ app.post('/checkHashes', async (req, res) => {
 
     try {
         const hashesArray = hashes.trim().split('\n');
-
-        // Skip sleep timer if there are exactly 3 lines of input
-        const skipSleep = hashesArray.length === 3;
+        // Skip sleep timer if there are less than 3 hashes as input
+        const shouldSkipSleep = hashesArray.length < 4;
 
         for (const hash of hashesArray) {
             const trimmedHash = hash.trim();
@@ -47,7 +46,7 @@ app.post('/checkHashes', async (req, res) => {
                 continue;
             }
 
-            if (!skipSleep) {
+            if (!shouldSkipSleep) {
                 // Introduce a 15-second delay before each API request
                 await sleep(15000); // 15 seconds in milliseconds
             }
