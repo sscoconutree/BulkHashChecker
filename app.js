@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const { json } = require('express');
 
-const apikey = 'API KEY HERE';
+const apikey = '723a6f400cc6656c7e095e68165cd9b6bb42773a83faef359512a353785903b3';
 
 const app = express();
 
@@ -20,11 +20,13 @@ app.post('/checkHashes', async (req, res) => {
 
     try {
         const hashesArray = hashes.trim().split('\n');
-        
+
+        // Skip sleep timer if there are exactly 3 lines of input
+        const skipSleep = hashesArray.length === 3;
+
         for (const hash of hashesArray) {
             const trimmedHash = hash.trim();
 
-            // Determine hash type based on length
             let hashType;
             switch (trimmedHash.length) {
                 case 32:
@@ -40,14 +42,15 @@ app.post('/checkHashes', async (req, res) => {
                     hashType = 'Unknown';
             }
 
-            // Check if the trimmedHash is an IP address
             if (isIPAddress(trimmedHash)) {
                 console.log(`Skipped IP address: ${trimmedHash}`);
-                continue; // Skip processing this line
+                continue;
             }
 
-            // Introduce a 15-second delay before each API request
-            await sleep(15000); // 15 seconds in milliseconds
+            if (!skipSleep) {
+                // Introduce a 15-second delay before each API request
+                await sleep(15000); // 15 seconds in milliseconds
+            }
 
             const response = await fetch(`https://www.virustotal.com/vtapi/v2/file/report?apikey=${apikey}&resource=${trimmedHash}`);
             const result = await response.json();
@@ -65,6 +68,7 @@ app.post('/checkHashes', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error occurred while checking hashes' });
     }
 });
+
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
