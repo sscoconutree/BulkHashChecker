@@ -6,5 +6,6 @@ This is a frontend based VirusTotal bulk hash checker built in node.js and HTML 
 
 <h3>How to use:</h3>
 
-1. Have the files in a same folder and run the following: ```node app.js```
-2. Open ```localhost:3000```
+1. Edit ```app.js``` file and put your VirusTotal API key on the ```apikey``` field.
+2. Have the files in a same folder and run the following: ```node app.js```
+3. Open ```localhost:3000```
