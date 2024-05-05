@@ -46,8 +46,8 @@ app.post('/checkHashes', async (req, res) => {
                 continue; // Skip processing this line
             }
 
-            // Introduce a 10-second delay before each API request
-            await sleep(15000); // 10 seconds in milliseconds
+            // Introduce a 15-second delay before each API request
+            await sleep(15000); // 15 seconds in milliseconds
 
             const response = await fetch(`https://www.virustotal.com/vtapi/v2/file/report?apikey=${apikey}&resource=${trimmedHash}`);
             const result = await response.json();
